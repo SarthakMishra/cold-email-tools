@@ -2,6 +2,8 @@
 """
 Local, on-demand pipeline to enrich LinkedIn leads via Bright Data and
 generate personalized cold emails with an LLM.
+
+Original post: https://sarthakmishra.com/blog/scaling-highly-personalized-outbound
 """
 
 import json

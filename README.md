@@ -2,6 +2,8 @@
 
 Enrich LinkedIn leads via Bright Data and generate personalized cold emails with AI.
 
+**Original post:** [Scaling highly personalized outbound with AI](https://sarthakmishra.com/blog/scaling-highly-personalized-outbound)
+
 ## Quick Start
 
 1. **Install dependencies:**
