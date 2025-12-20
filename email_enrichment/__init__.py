@@ -1,0 +1,2 @@
+"""Email validation pipeline package."""
+

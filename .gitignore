@@ -11,5 +11,5 @@ wheels/
 
 # Other
 .env
-input_leads.csv
+leads.csv
 output/

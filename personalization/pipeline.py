@@ -8,7 +8,6 @@ Original post: https://sarthakmishra.com/blog/scaling-highly-personalized-outbou
 
 import json
 import logging
-import os
 import time
 from datetime import datetime
 from pathlib import Path
@@ -17,28 +16,22 @@ from typing import Dict, List, Sequence, Union
 import pandas as pd
 import requests
 from openai import APIError, OpenAI, RateLimitError
-from dotenv import load_dotenv
 
-load_dotenv()
-
-BRIGHTDATA_API_KEY = os.getenv("BRIGHTDATA_API_KEY", "")
-
-BRIGHTDATA_TRIGGER_URL = "https://api.brightdata.com/datasets/v3/trigger"
-BRIGHTDATA_SNAPSHOT_URL = "https://api.brightdata.com/datasets/v3/snapshot"
-
-PROFILE_DATASET_ID = "gd_l1viktl72bvl7bjuj0"
-COMPANY_DATASET_ID = "gd_l1vikfnt1wgvvqz95w"
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-LLM_MODEL = os.getenv("LLM_MODEL", "gpt-5.2")
-
-INPUT_LEADS_CSV = os.getenv("INPUT_LEADS_CSV", "input_leads.csv")
-OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", "output"))
-LOCAL_PROFILES_PATH = os.getenv("LOCAL_PROFILES_PATH", "")
-USE_LOCAL_PROFILES = os.getenv("USE_LOCAL_PROFILES", "false").lower() == "true"
-
-POLL_INTERVAL_SECONDS = int(os.getenv("POLL_INTERVAL_SECONDS", "5"))
-POLL_TIMEOUT_SECONDS = int(os.getenv("POLL_TIMEOUT_SECONDS", "300"))
+from .config import (
+    BRIGHTDATA_API_KEY,
+    BRIGHTDATA_SNAPSHOT_URL,
+    BRIGHTDATA_TRIGGER_URL,
+    COMPANY_DATASET_ID,
+    INPUT_LEADS_CSV,
+    LLM_MODEL,
+    LOCAL_PROFILES_PATH,
+    OPENAI_API_KEY,
+    OUTPUT_DIR,
+    POLL_INTERVAL_SECONDS,
+    POLL_TIMEOUT_SECONDS,
+    PROFILE_DATASET_ID,
+    USE_LOCAL_PROFILES,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -386,3 +379,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
