@@ -1,4 +1,4 @@
-# SEO Tools - Cold Outreach Pipelines
+# Cold Outreach Pipelines
 
 Two complementary pipelines for modern cold outreach:
 1. **Email Enrichment Pipeline** - Find verified work emails that never made it into public databases
