@@ -1,8 +1,9 @@
 # Cold Outreach Pipelines
 
-Two complementary pipelines for modern cold outreach:
+Three complementary pipelines for modern cold outreach:
 1. **Email Enrichment Pipeline** - Find verified work emails that never made it into public databases
 2. **Personalization Pipeline** - Enrich LinkedIn leads and generate personalized cold emails with AI
+3. **LinkedIn Automation Pipeline** - Automated LinkedIn campaign pipeline that visits profiles and sends connection requests with personalized notes
 
 ## Email Enrichment Pipeline
 
@@ -102,3 +103,73 @@ Enrich LinkedIn leads via Bright Data and generate personalized cold emails with
 Results are saved to `personalization/output/` with timestamped filenames:
 - `enriched_profiles_YYYYMMDD_HHMMSS.json` — raw Bright Data profile data
 - `leads_YYYYMMDD_HHMMSS.csv` — enriched leads with personalized messages ready for import to outreach tools
+
+## LinkedIn Automation Pipeline
+
+Automated LinkedIn campaign pipeline that visits profiles and sends connection requests with personalized notes.
+
+### Quick Start
+
+1. **Prerequisites:**
+   - [OpenOutreach API server](https://github.com/SarthakMishra/OpenOutreach) running
+
+2. **Configure environment:**
+   ```bash
+   cp env.example .env
+   ```
+   Edit `.env` and add:
+   - `OPENOUTREACH_API_URL` (default: `http://localhost:8000`)
+   - `OPENOUTREACH_API_KEY`
+   - `ACCOUNT_HANDLE` - Unique identifier for this account
+   - `ACCOUNT_USERNAME` - LinkedIn email/username
+   - `ACCOUNT_PASSWORD` - LinkedIn password
+   - `ACCOUNT_PROXY` (optional) - Proxy URL
+   - `ACCOUNT_DAILY_CONNECTIONS` (optional, default: `50`)
+   - `ACCOUNT_DAILY_MESSAGES` (optional, default: `20`)
+
+3. **Configure pipeline settings:**
+   - Edit `linkedin_automation/config.py` to customize:
+     - `PROFILE_VISIT_DURATION_S` (default: `5.0`)
+     - `PROFILE_VISIT_SCROLL_DEPTH` (default: `3`)
+     - `RUN_POLL_INTERVAL_S` (default: `2.0`)
+     - `RUN_POLL_TIMEOUT_S` (default: `300.0`)
+
+4. **Prepare leads CSV:**
+   - Copy the sample file: `cp linkedin_automation/input/leads.sample.csv linkedin_automation/input/leads.csv`
+   - Edit `linkedin_automation/input/leads.csv` with your leads
+   - Required columns: `linkedin_url`, `note`
+   - Example:
+     ```csv
+     linkedin_url,note
+     https://www.linkedin.com/in/example1/,Hi! I noticed your work in [industry] and would love to connect.
+     https://www.linkedin.com/in/example2/,Hello! I'd like to connect and learn more about your experience.
+     ```
+
+5. **Run:**
+   ```bash
+   uv run python -m linkedin_automation.pipeline
+   ```
+
+### Output
+
+Results are saved to `linkedin_automation/output/campaign_results_YYYYMMDD_HHMMSS.csv` with:
+- `linkedin_url` - Profile URL processed
+- `note` - Connection note used
+- `profile_visit_status` - Status: "completed", "failed", or "skipped"
+- `profile_visit_error` - Error message if visit failed
+- `profile_visit_run_id` - Run ID for profile visit
+- `connect_status` - Status: "completed", "failed", or "skipped"
+- `connect_error` - Error message if connection failed
+- `connect_run_id` - Run ID for connection request
+- `success` - True if both steps completed successfully
+
+### How It Works
+
+1. **Account Setup** - Checks if account exists in OpenOutreach, creates it if missing
+2. **Load Leads** - Reads `input/leads.csv` and validates required columns
+3. **Process Each Lead**:
+   - Creates a `profile_visit` run via API
+   - Polls until completion (or timeout)
+   - If successful, creates a `connect` run with the note
+   - Polls until completion (or timeout)
+4. **Export Results** - Writes timestamped CSV with all results
