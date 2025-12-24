@@ -51,8 +51,10 @@ class OpenOutreachClient:
         self.api_key = api_key
         self.headers = {
             "Content-Type": "application/json",
-            "X-API-Key": api_key,
         }
+        # Only include API key header if provided
+        if api_key:
+            self.headers["X-API-Key"] = api_key
 
     def create_run(
         self,
@@ -226,8 +228,6 @@ class LinkedInAutomationPipeline:
     """End-to-end LinkedIn automation pipeline."""
 
     def __init__(self) -> None:
-        if not API_KEY:
-            raise ValueError("OPENOUTREACH_API_KEY environment variable is required")
         if not ACCOUNT_HANDLE:
             raise ValueError("ACCOUNT_HANDLE environment variable is required")
         if not ACCOUNT_USERNAME:
